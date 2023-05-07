@@ -36,7 +36,7 @@
 	"dependencies": {
 		"@connect2ic/core": "^0.2.0-beta.5",
 		"@connect2ic/svelte": "^0.1.6",
-		"@dfinity/candid-ui": "^1.0.2",
+		"@dfinity/candid-ui": "file:../dfn-components/packages/candid-ui",
 		"@dfinity/gix-components": "^2.5.0",
 		"@sveltejs/adapter-static": "^2.0.2",
 		"autoprefixer": "^10.4.14",
