@@ -22,6 +22,7 @@
 
 	const updateUrlParams = (args: any) => {
 		const parsedValues = JSON.stringify(principalToText(args));
+		console.log('🚀 ~ file: +page.svelte:25 ~ updateUrlParams ~ parsedValues:', parsedValues);
 		const urlParams = new URLSearchParams(window.location.search);
 
 		urlParams.set('defaultValues', encodeURIComponent(parsedValues));
@@ -35,7 +36,13 @@
 		const candidUiRef = document.querySelector('candid-ui');
 
 		if (candidUiRef) {
-			candidUiRef.addEventListener('ready', async (event) => {});
+			candidUiRef.addEventListener('ready', async () => {
+				const { method } = JSON.parse(defaultValues) || {};
+				if (method) {
+					const defaultMethodContainer = candidUiRef?.shadowRoot?.querySelector(`li#${method}`);
+					defaultMethodContainer?.scrollIntoView();
+				}
+			});
 			candidUiRef.addEventListener('filled', async (event: any) => {
 				if (event.detail) updateUrlParams(event.detail);
 			});
