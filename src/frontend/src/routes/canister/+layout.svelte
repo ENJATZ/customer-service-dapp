@@ -4,6 +4,7 @@
 	import NavBar from '$lib/components/header/nav-bar.svelte';
 	import { createClient } from '@connect2ic/core';
 	import { defaultProviders } from '@connect2ic/core/providers';
+	import('@dfinity/candid-ui').then(({ defineElement }) => defineElement());
 
 	export let data: { canister: string | undefined; idlFactory: any | undefined };
 	const { canister: canisterId, idlFactory } = data;

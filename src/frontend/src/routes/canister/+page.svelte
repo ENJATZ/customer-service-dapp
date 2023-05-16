@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { useCanister, useConnect } from '@connect2ic/svelte';
 	import { type Agent, Actor } from '@dfinity/agent';
-	import { defineElement } from '@dfinity/candid-ui';
 
 	import { page } from '$app/stores';
 	import { principalToText } from '$lib/utils/candid.utils';
@@ -35,7 +34,6 @@
 	};
 
 	onMount(() => {
-		defineElement();
 		console.log('i am on mount');
 		defaultValues = decodeURIComponent($page.url.searchParams.get('defaultValues') ?? '');
 
