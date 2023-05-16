@@ -1,48 +1,51 @@
 {
-	"name": "customer-service-svelte",
-	"version": "0.0.1",
+	"name": "sveltekit-starter",
+	"version": "0.1.0",
 	"private": true,
+	"description": "Internet Computer SvelteKit starter application",
+	"keywords": [
+		"Internet Computer",
+		"Motoko",
+		"JavaScript",
+		"Canister",
+		"SvelteKit"
+	],
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"prebuild": "npm run generate",
+		"generate": "dfx generate && node ./update.types.mjs && npm run format"
 	},
 	"devDependencies": {
-		"@originjs/vite-plugin-commonjs": "^1.0.3",
 		"@rollup/plugin-inject": "^5.0.3",
-		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.5.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
+		"autoprefixer": "^10.4.14",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte3": "^4.0.0",
 		"prettier": "^2.8.0",
+		"prettier-plugin-motoko": "^0.2.3",
+		"prettier-plugin-organize-imports": "^3.2.0",
 		"prettier-plugin-svelte": "^2.8.1",
-		"rollup-plugin-node-builtins": "^2.1.2",
+		"sass": "^1.56.1",
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
-		"vite": "^4.2.0",
-		"vitest": "^0.25.3"
+		"vite": "^4.2.0"
 	},
 	"type": "module",
 	"dependencies": {
-		"@connect2ic/core": "^0.2.0-beta.5",
-		"@connect2ic/svelte": "^0.1.6",
-		"@dfinity/candid-ui": "file:../dfn-components/packages/candid-ui",
-		"@dfinity/gix-components": "^2.5.0",
-		"@sveltejs/adapter-static": "^2.0.2",
-		"autoprefixer": "^10.4.14",
-		"buffer": "^6.0.3",
-		"regenerator-runtime": "^0.13.11",
-		"svelte-preprocess": "^5.0.3",
-		"vite-plugin-commonjs": "^0.6.2"
+		"@dfinity/agent": "^0.14.1",
+		"@dfinity/candid": "^0.14.1",
+		"@dfinity/principal": "^0.14.1",
+		"@sveltejs/adapter-static": "^2.0.2"
 	}
 }

@@ -5,6 +5,7 @@ import { error, type LoadEvent } from '@sveltejs/kit';
 import type { PageLoad } from './$types';
 import { isValidCanisterId } from '$lib/utils/canister.utils';
 import { getRemoteDidJs } from '$lib/services/candid.service';
+import { defineElement } from 'file:../dfn-components/packages/candid-ui';
 
 export const load: PageLoad = async ($event: LoadEvent): Promise<LayoutLoad> => {
 	if (!browser) {

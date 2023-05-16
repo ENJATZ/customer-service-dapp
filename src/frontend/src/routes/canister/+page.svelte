@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { useCanister } from '@connect2ic/svelte';
+	import { useCanister, useConnect } from '@connect2ic/svelte';
 	import { type Agent, Actor } from '@dfinity/agent';
 
 	import { page } from '$app/stores';
@@ -15,9 +15,12 @@
 	const agent = writable<Agent | undefined>(undefined);
 
 	const [actor] = useCanister('main');
+	const { isConnected } = useConnect();
 
 	actor.subscribe((newActor: any) => {
-		agent.set(Actor.agentOf(newActor.value));
+		if (newActor && $isConnected) {
+			agent.set(Actor.agentOf(newActor.value));
+		}
 	});
 
 	const updateUrlParams = (args: any) => {
@@ -31,9 +34,11 @@
 	};
 
 	onMount(() => {
+		console.log('i am on mount');
 		defaultValues = decodeURIComponent($page.url.searchParams.get('defaultValues') ?? '');
 
 		const candidUiRef = document.querySelector('candid-ui');
+		console.log('🚀 ~ file: +page.svelte:41 ~ onMount ~ candidUiRef:', candidUiRef);
 
 		if (candidUiRef) {
 			candidUiRef.addEventListener('ready', async () => {
@@ -44,6 +49,7 @@
 				}
 			});
 			candidUiRef.addEventListener('filled', async (event: any) => {
+				console.log('🚀 ~ file: +page.svelte:51 ~ candidUiRef.addEventListener ~ event:', event);
 				if (event.detail) updateUrlParams(event.detail);
 			});
 		}

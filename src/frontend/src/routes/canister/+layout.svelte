@@ -1,7 +1,4 @@
 <script lang="ts">
-	import('@dfinity/candid-ui').then(({ defineElement }) => {
-		defineElement();
-	});
 	import { onMount } from 'svelte';
 	import { Connect2ICProvider } from '@connect2ic/svelte';
 	import NavBar from '$lib/components/header/nav-bar.svelte';
@@ -31,7 +28,7 @@
 
 	// Dirty, I know, ref: https://github.com/pablo-abc/felte/issues/223
 	let mounted = false;
-	onMount(() => {
+	onMount(async () => {
 		mounted = true;
 	});
 </script>
