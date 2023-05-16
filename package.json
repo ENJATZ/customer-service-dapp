@@ -23,6 +23,7 @@
 	},
 	"devDependencies": {
 		"@rollup/plugin-inject": "^5.0.3",
+		"@sveltejs/adapter-static": "^2.0.2",
 		"@sveltejs/kit": "^1.5.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
@@ -43,9 +44,11 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@connect2ic/svelte": "^0.1.6",
 		"@dfinity/agent": "^0.14.1",
 		"@dfinity/candid": "^0.14.1",
+		"@dfinity/candid-ui": "file:../dfn-components/packages/candid-ui",
 		"@dfinity/principal": "^0.14.1",
-		"@sveltejs/adapter-static": "^2.0.2"
+		"regenerator-runtime": "^0.13.11"
 	}
 }
