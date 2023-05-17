@@ -56,6 +56,13 @@
 	});
 </script>
 
-<div>
+<section class="candid-ui">
 	<candid-ui {canisterId} {defaultValues} {agent} />
-</div>
+</section>
+
+<style lang="scss">
+	.candid-ui {
+		height: calc(100% - 64px);
+		overflow: hidden;
+	}
+</style>

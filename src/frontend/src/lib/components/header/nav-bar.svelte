@@ -1,7 +1,17 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import { ConnectButton, ConnectDialog, useConnect } from '@connect2ic/svelte';
+	import EraseIcon from '$lib/components/icons/erase-icon.svelte';
 	import '@connect2ic/core/style.css';
 
+	const dispatch = createEventDispatcher();
+
+	const handleClearLink = () => {
+		const urlSearchParams = new URLSearchParams(window.location.search);
+    urlSearchParams.delete('defaultValues');
+    const newUrl = `${window.location.origin}${window.location.pathname}?${urlSearchParams.toString()}`;
+    window.location.href = newUrl;
+	}
 	const { principal } = useConnect();
 </script>
 
@@ -15,10 +25,13 @@
 		{/if}
 		<ConnectButton />
 		<ConnectDialog />
+		<div class="navbar__clear" on:click={handleClearLink}>
+			<EraseIcon />
+		</div>
 	</div>
 </div>
 
-<style>
+<style lang="scss">
 	.navbar {
 		display: flex;
 		border-bottom: 1px solid;
@@ -48,5 +61,17 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+
+	.navbar__clear {
+		background: rgb(35 35 39);
+		padding: 10px 20px;
+		border-radius: 2rem;
+		cursor: pointer;
+
+		&:hover {
+			transform: scale(1.03);
+      transition: all 0.4s;
+		}
 	}
 </style>

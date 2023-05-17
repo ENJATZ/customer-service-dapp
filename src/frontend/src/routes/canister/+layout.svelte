@@ -35,10 +35,18 @@
 </script>
 
 {#if authClient && mounted}
+<div class="container">
 	<Connect2ICProvider client={authClient}>
 		<NavBar />
 		<slot />
 	</Connect2ICProvider>
+</div>
 {:else}
 	loading...
 {/if}
+
+<style>
+	.container {
+		height: 100vh;
+	}
+</style>
