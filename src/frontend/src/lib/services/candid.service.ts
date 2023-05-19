@@ -1,7 +1,7 @@
-import { Actor, HttpAgent, type ActorSubclass } from '@dfinity/agent';
-import { Principal } from '@dfinity/principal';
-import type { IDL } from '@dfinity/candid';
 import { cleanDidFile } from '$lib/utils/candid.utils';
+import { Actor, HttpAgent, type ActorSubclass } from '@dfinity/agent';
+import type { IDL } from '@dfinity/candid';
+import { Principal } from '@dfinity/principal';
 
 const agent = new HttpAgent({
 	host: 'https://boundary.ic0.app/'

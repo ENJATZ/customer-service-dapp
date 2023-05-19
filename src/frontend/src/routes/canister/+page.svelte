@@ -19,9 +19,17 @@
 
 	actor.subscribe((newActor: any) => {
 		if (newActor && $isConnected) {
+			const newAgent = Actor.agentOf(newActor.value);
+			console.log("🚀 ~ file: +page.svelte:23 ~ actor.subscribe ~ newAgent:", newAgent)
 			agent.set(Actor.agentOf(newActor.value));
 		}
 	});
+
+	isConnected.subscribe((value: boolean) => {
+		if(!value) {
+			agent.set(undefined)
+		}
+	})
 
 	const updateUrlParams = (args: any) => {
 		const parsedValues = JSON.stringify(principalToText(args));
@@ -42,11 +50,14 @@
 
 		if (candidUiRef) {
 			candidUiRef.addEventListener('ready', async () => {
-				const { method } = JSON.parse(defaultValues) || {};
-				if (method) {
-					const defaultMethodContainer = candidUiRef?.shadowRoot?.querySelector(`li#${method}`);
-					defaultMethodContainer?.scrollIntoView();
+				if(defaultValues) {
+					const { method } = JSON.parse(defaultValues) || {};
+						if (method) {
+							const defaultMethodContainer = candidUiRef?.shadowRoot?.querySelector(`li#${method}`);
+							defaultMethodContainer?.scrollIntoView();
+						}
 				}
+				
 			});
 			candidUiRef.addEventListener('filled', async (event: any) => {
 				console.log('🚀 ~ file: +page.svelte:51 ~ candidUiRef.addEventListener ~ event:', event);
@@ -55,9 +66,8 @@
 		}
 	});
 </script>
-
 <section class="candid-ui">
-	<candid-ui {canisterId} {defaultValues} {agent} />
+	<candid-ui {canisterId} {defaultValues} agent={$agent} />
 </section>
 
 <style lang="scss">

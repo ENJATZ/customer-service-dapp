@@ -1,5 +1,5 @@
-import type { Principal } from '@dfinity/principal';
 import type { HttpAgent } from '@dfinity/agent';
+import type { Principal } from '@dfinity/principal';
 import type { Readable } from 'svelte/store';
 import { writable } from 'svelte/store';
 // Might not need this whole store

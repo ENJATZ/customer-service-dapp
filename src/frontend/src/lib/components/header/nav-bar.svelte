@@ -4,14 +4,15 @@
 	import EraseIcon from '$lib/components/icons/erase-icon.svelte';
 	import '@connect2ic/core/style.css';
 
-	const dispatch = createEventDispatcher();
 
 	const handleClearLink = () => {
 		const urlSearchParams = new URLSearchParams(window.location.search);
-    urlSearchParams.delete('defaultValues');
-    const newUrl = `${window.location.origin}${window.location.pathname}?${urlSearchParams.toString()}`;
-    window.location.href = newUrl;
-	}
+		urlSearchParams.delete('defaultValues');
+		const newUrl = `${window.location.origin}${
+			window.location.pathname
+		}?${urlSearchParams.toString()}`;
+		window.location.href = newUrl;
+	};
 	const { principal } = useConnect();
 </script>
 
@@ -71,7 +72,7 @@
 
 		&:hover {
 			transform: scale(1.03);
-      transition: all 0.4s;
+			transition: all 0.4s;
 		}
 	}
 </style>
