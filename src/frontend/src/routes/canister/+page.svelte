@@ -1,14 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { useCanister, useConnect } from '@connect2ic/svelte';
-	import { type Agent, Actor } from '@dfinity/agent';
-
 	import { page } from '$app/stores';
 	import { principalToText } from '$lib/utils/candid.utils';
 	import { writable } from 'svelte/store';
+	import { appStore } from '$lib/stores/app.store';
+	import { type Agent, Actor } from '@dfinity/agent';
+	import { type Options } from '@dfinity/candid-ui';
 
 	export let data: { canister: string | null | undefined };
-	export let defaultValues: any;
+	export let candidUiOptions: Options = {
+		hideMethodsIdl: true,
+		defaultValues: undefined
+	};
+	export let candidUiMethods: string[] | undefined;
 
 	const { canister: canisterId } = data;
 
@@ -17,19 +22,26 @@
 	const [actor] = useCanister('main');
 	const { isConnected } = useConnect();
 
+	export let showSelectedMethodOnly: boolean = true;
+
+	appStore.subscribe((store) => {
+		console.log('🚀 ~ file: +page.svelte:28 ~ appStore.subscribe ~ store:', store);
+		candidUiOptions.hideMethodsIdl = store.hideMethodsIdl;
+		showSelectedMethodOnly = store.showSelectedMethodOnly;
+	});
+
 	actor.subscribe((newActor: any) => {
 		if (newActor && $isConnected) {
 			const newAgent = Actor.agentOf(newActor.value);
-			console.log("🚀 ~ file: +page.svelte:23 ~ actor.subscribe ~ newAgent:", newAgent)
 			agent.set(Actor.agentOf(newActor.value));
 		}
 	});
 
 	isConnected.subscribe((value: boolean) => {
-		if(!value) {
-			agent.set(undefined)
+		if (!value) {
+			agent.set(undefined);
 		}
-	})
+	});
 
 	const updateUrlParams = (args: any) => {
 		const parsedValues = JSON.stringify(principalToText(args));
@@ -42,22 +54,22 @@
 	};
 
 	onMount(() => {
-		console.log('i am on mount');
-		defaultValues = decodeURIComponent($page.url.searchParams.get('defaultValues') ?? '');
+		candidUiOptions.defaultValues = JSON.parse(
+			decodeURIComponent($page.url.searchParams.get('defaultValues') ?? '')
+		);
 
 		const candidUiRef = document.querySelector('candid-ui');
-		console.log('🚀 ~ file: +page.svelte:41 ~ onMount ~ candidUiRef:', candidUiRef);
 
 		if (candidUiRef) {
 			candidUiRef.addEventListener('ready', async () => {
-				if(defaultValues) {
-					const { method } = JSON.parse(defaultValues) || {};
-						if (method) {
-							const defaultMethodContainer = candidUiRef?.shadowRoot?.querySelector(`li#${method}`);
-							defaultMethodContainer?.scrollIntoView();
-						}
+				if (candidUiOptions.defaultValues) {
+					const { method } = candidUiOptions.defaultValues || {};
+					if (method) {
+						if (showSelectedMethodOnly) candidUiMethods = [method];
+						const defaultMethodContainer = candidUiRef?.shadowRoot?.querySelector(`li#${method}`);
+						defaultMethodContainer?.scrollIntoView();
+					}
 				}
-				
 			});
 			candidUiRef.addEventListener('filled', async (event: any) => {
 				console.log('🚀 ~ file: +page.svelte:51 ~ candidUiRef.addEventListener ~ event:', event);
@@ -66,8 +78,14 @@
 		}
 	});
 </script>
+
 <section class="candid-ui">
-	<candid-ui {canisterId} {defaultValues} agent={$agent} />
+	<candid-ui
+		{canisterId}
+		options={JSON.stringify(candidUiOptions)}
+		agent={$agent}
+		methods={candidUiMethods}
+	/>
 </section>
 
 <style lang="scss">
