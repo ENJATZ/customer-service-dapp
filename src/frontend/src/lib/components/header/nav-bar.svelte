@@ -1,16 +1,29 @@
 <script lang="ts">
-	import { ConnectButton, ConnectDialog, useConnect } from '@connect2ic/svelte';
-	import { appStore } from '$lib/stores/app.store';
 	import EraseIcon from '$lib/components/icons/erase-icon.svelte';
 	import CogIcon from '$lib/components/icons/cog-icon.svelte';
 	import EyeIcon from '$lib/components/icons/eye-icon.svelte';
 	import ShareIcon from '$lib/components/icons/share-icon.svelte';
 	import DropdownItem from './dropdown-item.svelte';
+	import { ConnectButton, ConnectDialog, useConnect } from '@connect2ic/svelte';
+	import { appStore } from '$lib/stores/app.store';
+	import { QUERY_PARAM } from '$lib/constants/routes.constants';
+	import { updateQueryParamValue } from '$lib/utils/url.utils';
 	import '@connect2ic/core/style.css';
+
+	const { principal } = useConnect();
+	const { setHideMethodsIdl, setShowSelectedMethodOnly } = appStore;
+
+	let hideMethodsIdl: boolean = true,
+		showSelectedMethodOnly: boolean = true;
+
+	appStore.subscribe((value) => {
+		hideMethodsIdl = value.hideMethodsIdl;
+		showSelectedMethodOnly = value.showSelectedMethodOnly;
+	});
 
 	const handleClearLink = () => {
 		const urlSearchParams = new URLSearchParams(window.location.search);
-		urlSearchParams.delete('defaultValues');
+		urlSearchParams.delete(QUERY_PARAM.DEFAULT_VALUES);
 		const newUrl = `${window.location.origin}${
 			window.location.pathname
 		}?${urlSearchParams.toString()}`;
@@ -29,17 +42,15 @@
 		}
 	};
 
-	const { setHideMethodsIdl, setShowSelectedMethodOnly } = appStore;
+	const handleHideMethodsIdl = (value: boolean) => {
+		setHideMethodsIdl(value);
+		updateQueryParamValue(QUERY_PARAM.HIDE_METHODS_IDL, value);
+	};
 
-	let hideMethodsIdl: boolean = true,
-		showSelectedMethodOnly: boolean = true;
-
-	appStore.subscribe((value) => {
-		hideMethodsIdl = value.hideMethodsIdl;
-		showSelectedMethodOnly = value.showSelectedMethodOnly;
-	});
-
-	const { principal } = useConnect();
+	const handleShowSelectedMethodOnly = (value: boolean) => {
+		setShowSelectedMethodOnly(value);
+		updateQueryParamValue(QUERY_PARAM.SHOW_SELECTED_METHOD_ONLY, value);
+	};
 </script>
 
 <div class="navbar">
@@ -60,19 +71,16 @@
 				<DropdownItem
 					isCheckItem={true}
 					isChecked={hideMethodsIdl}
-					handleClick={(value) => {
-						console.log(value);
-						setHideMethodsIdl(value);
-					}}
+					handleClick={handleHideMethodsIdl}
 				>
 					<EyeIcon slot="icon" />Hide methods IDL
 				</DropdownItem>
 				<DropdownItem
 					isCheckItem={true}
 					isChecked={showSelectedMethodOnly}
-					handleClick={(value) => setShowSelectedMethodOnly(value)}
+					handleClick={handleShowSelectedMethodOnly}
 				>
-					<EyeIcon slot="icon" />Set selected method only
+					<EyeIcon slot="icon" />Show selected method only
 				</DropdownItem>
 				<hr />
 				<DropdownItem handleClick={handleClearLink}>
@@ -153,7 +161,7 @@
 		padding: 0.5rem;
 		position: absolute;
 		right: 0;
-		top: 100%;
+		top: 105%;
 		width: 250px;
 		z-index: 3;
 

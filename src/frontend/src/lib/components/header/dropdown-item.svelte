@@ -1,8 +1,8 @@
 <script lang="ts">
 	import EmptyCircle from '../icons/empty-circle.svelte';
 	import CheckedCircle from '../icons/checked-circle.svelte';
-	export let isCheckItem: boolean;
-	export let isChecked: boolean;
+	export let isCheckItem: boolean = false;
+	export let isChecked: boolean = false;
 	export let handleClick: any;
 
 	const onClick = () => {

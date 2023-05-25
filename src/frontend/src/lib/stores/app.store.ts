@@ -1,3 +1,4 @@
+import { QUERY_PARAM } from '$lib/constants/routes.constants';
 import { getQueryParamValue } from '$lib/utils/url.utils';
 import type { Readable } from 'svelte/store';
 import { writable } from 'svelte/store';
@@ -14,13 +15,13 @@ export interface AppStore extends Readable<AppStoreData> {
 
 const initAuthStore = (): AppStore => {
 	const valuesFromUrl = {
-		hideMethodsIdl: getQueryParamValue('hideMethodsIdl'),
-		showSelectedMethodOnly: getQueryParamValue('showSelectedMethodOnly')
+		hideMethodsIdl: getQueryParamValue(QUERY_PARAM.HIDE_METHODS_IDL),
+		showSelectedMethodOnly: getQueryParamValue(QUERY_PARAM.SHOW_SELECTED_METHOD_ONLY)
 	};
 	const { subscribe, update } = writable<AppStoreData>({
-		hideMethodsIdl: valuesFromUrl.hideMethodsIdl ? Boolean(valuesFromUrl.hideMethodsIdl) : true,
+		hideMethodsIdl: valuesFromUrl.hideMethodsIdl ? valuesFromUrl.hideMethodsIdl === 'true' : true,
 		showSelectedMethodOnly: valuesFromUrl.showSelectedMethodOnly
-			? Boolean(valuesFromUrl.showSelectedMethodOnly)
+			? valuesFromUrl.showSelectedMethodOnly === 'true'
 			: true
 	});
 

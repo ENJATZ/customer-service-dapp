@@ -2,19 +2,22 @@
 	import { onMount } from 'svelte';
 	import { useCanister, useConnect } from '@connect2ic/svelte';
 	import { page } from '$app/stores';
-	import { principalToText } from '$lib/utils/candid.utils';
 	import { writable } from 'svelte/store';
 	import { appStore } from '$lib/stores/app.store';
+	import { updateQueryParamValue } from '$lib/utils/url.utils';
 	import { type Agent, Actor } from '@dfinity/agent';
 	import { type Options } from '@dfinity/candid-ui';
 
 	export let data: { canister: string | null | undefined };
+	export let candidUiMethods: string[] | undefined;
+	export let showSelectedMethodOnly: boolean = true;
 	export let candidUiOptions: Options = {
 		hideMethodsIdl: true,
 		defaultValues: undefined
 	};
-	export let candidUiMethods: string[] | undefined;
+	$: stringifiedOptions = JSON.stringify(candidUiOptions);
 
+	let askRender = false;
 	const { canister: canisterId } = data;
 
 	const agent = writable<Agent | undefined>(undefined);
@@ -22,18 +25,21 @@
 	const [actor] = useCanister('main');
 	const { isConnected } = useConnect();
 
-	export let showSelectedMethodOnly: boolean = true;
-
 	appStore.subscribe((store) => {
-		console.log('🚀 ~ file: +page.svelte:28 ~ appStore.subscribe ~ store:', store);
 		candidUiOptions.hideMethodsIdl = store.hideMethodsIdl;
 		showSelectedMethodOnly = store.showSelectedMethodOnly;
+		if (showSelectedMethodOnly && candidUiOptions?.defaultValues?.method) {
+			candidUiMethods = [candidUiOptions.defaultValues.method];
+		} else {
+			candidUiMethods = undefined;
+		}
+		askRender = !askRender;
 	});
 
 	actor.subscribe((newActor: any) => {
 		if (newActor && $isConnected) {
 			const newAgent = Actor.agentOf(newActor.value);
-			agent.set(Actor.agentOf(newActor.value));
+			agent.set(newAgent);
 		}
 	});
 
@@ -42,16 +48,6 @@
 			agent.set(undefined);
 		}
 	});
-
-	const updateUrlParams = (args: any) => {
-		const parsedValues = JSON.stringify(principalToText(args));
-		console.log('🚀 ~ file: +page.svelte:25 ~ updateUrlParams ~ parsedValues:', parsedValues);
-		const urlParams = new URLSearchParams(window.location.search);
-
-		urlParams.set('defaultValues', encodeURIComponent(parsedValues));
-		const newUrl = window.location.pathname + '?' + urlParams.toString();
-		history.pushState({ path: newUrl }, '', newUrl);
-	};
 
 	onMount(() => {
 		candidUiOptions.defaultValues = JSON.parse(
@@ -73,19 +69,21 @@
 			});
 			candidUiRef.addEventListener('filled', async (event: any) => {
 				console.log('🚀 ~ file: +page.svelte:51 ~ candidUiRef.addEventListener ~ event:', event);
-				if (event.detail) updateUrlParams(event.detail);
+				if (event.detail) updateQueryParamValue('defaultValues', event.detail);
 			});
 		}
 	});
 </script>
 
 <section class="candid-ui">
-	<candid-ui
-		{canisterId}
-		options={JSON.stringify(candidUiOptions)}
-		agent={$agent}
-		methods={candidUiMethods}
-	/>
+	{#key askRender}
+		<candid-ui
+			{canisterId}
+			options={stringifiedOptions}
+			agent={$agent}
+			{...candidUiMethods ? { methods: candidUiMethods } : {}}
+		/>
+	{/key}
 </section>
 
 <style lang="scss">
