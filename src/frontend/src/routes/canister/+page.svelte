@@ -51,7 +51,7 @@
 
 	onMount(() => {
 		candidUiOptions.defaultValues = JSON.parse(
-			decodeURIComponent($page.url.searchParams.get('defaultValues') ?? '')
+			decodeURIComponent($page.url.searchParams.get('defaultValues') ?? '{}')
 		);
 
 		const candidUiRef = document.querySelector('candid-ui');
@@ -74,6 +74,10 @@
 		}
 	});
 </script>
+
+<svelte:head>
+	<title>{data.canister} • Customer service dApp</title>
+</svelte:head>
 
 <section class="candid-ui">
 	{#key askRender}

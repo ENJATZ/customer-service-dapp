@@ -54,7 +54,9 @@
 </script>
 
 <div class="navbar">
-	<div class="navbar__logo" />
+	<div class="navbar__logo">
+		<img src="logo.png" alt="ICP Logo" />
+	</div>
 	<div class="navbar__auth">
 		{#if $principal}
 			<div class="navbar__principal">
@@ -102,8 +104,11 @@
 		justify-content: space-between;
 	}
 	.navbar__logo {
-		font-size: 32px;
-		font-weight: 700;
+		& :global(img) {
+			margin-left: 3rem;
+			margin-top: 0.3rem;
+			width: 80px;
+		}
 	}
 	.navbar__auth {
 		display: flex;

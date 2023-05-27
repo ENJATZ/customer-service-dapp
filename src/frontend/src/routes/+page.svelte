@@ -1,82 +1,128 @@
 <script lang="ts">
-	import { createActor } from '../../../declarations/backend';
+	import { onMount } from 'svelte';
+	import ValidIcon from '$lib/components/icons/valid-icon.svelte';
+	import InvalidIcon from '$lib/components/icons/invalid-icon.svelte';
+	import GoToIcon from '$lib/components/icons/go-to-icon.svelte';
+	import InfoIcon from '$lib/components/icons/info-icon.svelte';
+	import Tooltip from '$lib/components/base/tooltip.svelte';
 
-	let input = '';
-	let disabled = false;
-	let greeting = '';
+	let inputValue = '';
+	let isValid: boolean | undefined = undefined;
 
-	const handleOnSubmit = async () => {
-		disabled = true;
-
-		try {
-			// Canister IDs are automatically expanded to .env config - see vite.config.ts
-			const canisterId = import.meta.env.VITE_BACKEND_CANISTER_ID;
-
-			// We pass the host instead of using a proxy to support NodeJS >= v17 (ViteJS issue: https://github.com/vitejs/vite/issues/4794)
-			const host = import.meta.env.VITE_HOST;
-
-			// Create an actor to interact with the IC for a particular canister ID
-			const actor = createActor(canisterId, { agentOptions: { host } });
-
-			// Call the IC
-			greeting = await actor.greet(input);
-		} catch (err: unknown) {
-			console.error(err);
-		}
-
-		disabled = false;
+	const validateInput = () => {
+		const regex = /^[\w-]{5}-[\w-]{5}-[\w-]{5}-[\w-]{5}-[\w-]{3}$/;
+		isValid = regex.test(inputValue);
 	};
+
+	const redirect = () => {
+		if (isValid) {
+			window.location.href = `/canister?canisterId=${inputValue}`;
+		}
+	};
+
+	onMount(validateInput);
 </script>
 
 <main>
-	<img src="logo2.svg" alt="DFINITY logo" />
-	<br />
-	<br />
-
-	<form on:submit|preventDefault={handleOnSubmit}>
-		<label for="name">Enter your name: &nbsp;</label>
-		<input id="name" alt="Name" type="text" bind:value={input} {disabled} />
-		<button type="submit">Click Me!</button>
-	</form>
-
-	<section id="greeting">
-		{greeting}
-	</section>
+	<div class="form">
+		<img class="form__logo" src="logo.png" alt="ICP logo" />
+		<div class="form__input">
+			<input
+				type="text"
+				placeholder="Fill the canister id.."
+				bind:value={inputValue}
+				on:input={validateInput}
+			/>
+			<Tooltip
+				title="Fill in a valid canister id, a valid format looks like this: rrkah-fqaaa-aaaaa-aaaaq-cai."
+			>
+				{#if inputValue.length}
+					{#if isValid}
+						<ValidIcon />
+					{:else}
+						<InvalidIcon />
+					{/if}
+				{:else}
+					<InfoIcon />
+				{/if}
+			</Tooltip>
+		</div>
+		<div class="form__button" on:click={redirect}><GoToIcon />Go to form</div>
+	</div>
 </main>
 
+<svelte:head>
+	<title>Home Page • Customer service dApp</title>
+</svelte:head>
+
 <style lang="scss">
-	img {
-		max-width: 50vw;
-		max-height: 25vw;
-		display: block;
-		margin: auto;
-	}
-
-	form {
+	.form {
+		align-content: center;
+		align-items: center;
 		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		height: 100vh;
 		justify-content: center;
-		gap: 0.5em;
-		flex-flow: row wrap;
-		max-width: 40vw;
-		margin: auto;
-		align-items: baseline;
-		font-family: sans-serif;
-		font-size: 1.5rem;
 	}
 
-	button[type='submit'] {
-		padding: 5px 20px;
-		margin: 10px auto;
-		float: right;
+	.form__logo {
+		width: 200px;
+		margin-bottom: 1rem;
 	}
 
-	#greeting {
-		margin: 10px auto;
-		padding: 10px 60px;
-		border: 1px solid #222;
+	.form__input {
+		width: 350px;
+		display: flex;
+		align-items: center;
+
+		& :global(svg) {
+			margin-left: 0.25rem;
+			width: 1.25rem;
+			height: 1.25rem;
+		}
 	}
 
-	#greeting:empty {
-		display: none;
+	input {
+		width: 100%;
+		margin: 1rem 0;
+		display: inline-block;
+		border: 1px solid #ccc;
+		box-shadow: inset 0 1px 3px #ddd;
+		border-radius: 4px;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		padding-left: 20px;
+		padding-right: 20px;
+		padding-top: 12px;
+		padding-bottom: 12px;
+	}
+
+	.form__button {
+		font-family: 'Arial';
+		align-items: center;
+		background: rgb(35 35 39);
+		border-radius: 2rem;
+		color: #fff;
+		cursor: pointer;
+		display: flex;
+		gap: 0.5rem;
+		padding: 10px 20px;
+		width: fit-content;
+
+		& :global(svg) {
+			width: 1rem;
+			height: 1rem;
+
+			& :global(path) {
+				fill: #fff;
+			}
+		}
+
+		&:hover {
+			transform: scale(1.03);
+			transition: all 0.4s;
+		}
 	}
 </style>
