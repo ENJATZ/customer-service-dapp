@@ -26,9 +26,12 @@
 <main>
 	<div class="form">
 		<img class="form__logo" src="logo.png" alt="ICP logo" />
+		<h2>Customer service dApp</h2>
 		<div class="form__input">
 			<input
 				type="text"
+				name="canister-id"
+				id="canister-id"
 				placeholder="Fill the canister id.."
 				bind:value={inputValue}
 				on:input={validateInput}
@@ -47,7 +50,9 @@
 				{/if}
 			</Tooltip>
 		</div>
-		<div class="form__button" on:click={redirect}><GoToIcon />Go to form</div>
+		<div class="form__button" on:click={redirect}>
+			<GoToIcon />Go to form
+		</div>
 	</div>
 </main>
 
@@ -57,6 +62,7 @@
 
 <style lang="scss">
 	.form {
+		background-color: #eeeeee;
 		align-content: center;
 		align-items: center;
 		display: flex;
@@ -64,11 +70,15 @@
 		flex-wrap: wrap;
 		height: 100vh;
 		justify-content: center;
+
+		& h2 {
+			font-family: 'Arial';
+			margin-bottom: 1rem;
+		}
 	}
 
 	.form__logo {
 		width: 200px;
-		margin-bottom: 1rem;
 	}
 
 	.form__input {

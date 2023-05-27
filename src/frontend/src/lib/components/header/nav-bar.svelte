@@ -56,7 +56,9 @@
 
 <div class="navbar">
 	<div class="navbar__logo">
-		<img src="logo.png" alt="ICP Logo" />
+		<a href="/">
+			<img src="logo.png" alt="ICP Logo" />
+		</a>
 	</div>
 	<div class="navbar__auth">
 		{#if $principal}
