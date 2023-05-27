@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { Connect2ICProvider } from '@connect2ic/svelte';
 	import NavBar from '$lib/components/header/nav-bar.svelte';
+	import NotificationsContainer from '$lib/components/notifications/notifications-container.svelte';
 	import { createClient } from '@connect2ic/core';
 	import { defaultProviders } from '@connect2ic/core/providers';
 	import('@dfinity/candid-ui').then(({ defineElement }) => defineElement());
@@ -35,6 +36,7 @@
 </script>
 
 {#if authClient && mounted}
+	<NotificationsContainer />
 	<div class="container">
 		<Connect2ICProvider client={authClient}>
 			<NavBar />

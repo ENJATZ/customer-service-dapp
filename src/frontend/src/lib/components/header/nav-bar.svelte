@@ -6,12 +6,14 @@
 	import DropdownItem from './dropdown-item.svelte';
 	import { ConnectButton, ConnectDialog, useConnect } from '@connect2ic/svelte';
 	import { appStore } from '$lib/stores/app.store';
+	import { notificationStore } from '$lib/stores/notification.store';
 	import { QUERY_PARAM } from '$lib/constants/routes.constants';
 	import { updateQueryParamValue } from '$lib/utils/url.utils';
 	import '@connect2ic/core/style.css';
 
 	const { principal } = useConnect();
 	const { setHideMethodsIdl, setShowSelectedMethodOnly } = appStore;
+	const { pushNotification } = notificationStore;
 
 	let hideMethodsIdl: boolean = true,
 		showSelectedMethodOnly: boolean = true;
@@ -35,8 +37,7 @@
 
 		try {
 			await navigator.clipboard.writeText(tabUrl);
-			alert('Copied to clipboard; TODO: Make this nice!');
-			console.log('Tab link copied to clipboard:', tabUrl);
+			pushNotification('success', 'Share link copied to clipboard!');
 		} catch (error) {
 			console.error('Failed to copy tab link to clipboard:', error);
 		}

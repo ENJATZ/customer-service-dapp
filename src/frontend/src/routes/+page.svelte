@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { isValidCanisterId } from '$lib/utils/canister.utils';
 	import ValidIcon from '$lib/components/icons/valid-icon.svelte';
 	import InvalidIcon from '$lib/components/icons/invalid-icon.svelte';
 	import GoToIcon from '$lib/components/icons/go-to-icon.svelte';
@@ -10,8 +11,7 @@
 	let isValid: boolean | undefined = undefined;
 
 	const validateInput = () => {
-		const regex = /^[\w-]{5}-[\w-]{5}-[\w-]{5}-[\w-]{5}-[\w-]{3}$/;
-		isValid = regex.test(inputValue);
+		isValid = isValidCanisterId(inputValue);
 	};
 
 	const redirect = () => {
