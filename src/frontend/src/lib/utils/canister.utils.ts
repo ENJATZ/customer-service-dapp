@@ -11,8 +11,10 @@ export const isValidCanisterId = (canisterId: string): boolean =>
 
 export const isMethodBlacklisted = (method: string, canisterId?: string | null) => {
 	if (METHODS_BLACKLIST['*'].indexOf(method) !== -1) return true;
-	if (canisterId) {
-		if (METHODS_BLACKLIST[canisterId]?.indexOf(method) !== -1) return true;
+	if (canisterId && canisterId in METHODS_BLACKLIST) {
+		if (METHODS_BLACKLIST[canisterId]?.indexOf(method) !== -1) {
+			return true;
+		}
 	}
 	return false;
 };
