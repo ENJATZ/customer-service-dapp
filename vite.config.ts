@@ -5,14 +5,10 @@ import { join } from 'path';
 import type { UserConfig } from 'vite';
 import { defineConfig, loadEnv } from 'vite';
 
-// npm run dev = local
-// npm run build = local
-// dfx deploy = local
-// dfx deploy --network ic = ic
 const network = process.env.DFX_NETWORK ?? 'local';
 const host = network === 'local' ? 'http://localhost:8000' : 'https://ic0.app';
 
-const readCanisterIds = ({ prefix }: { prefix?: string }): Record<string, string> => {
+const readCanisterIds = ({ prefix = '' }: { prefix?: string }): Record<string, string> => {
 	const canisterIdsJsonFile =
 		network === 'ic'
 			? join(process.cwd(), 'canister_ids.json')
@@ -31,12 +27,13 @@ const readCanisterIds = ({ prefix }: { prefix?: string }): Record<string, string
 
 			return {
 				...acc,
-				[`${prefix ?? ''}${canisterName.toUpperCase()}_CANISTER_ID`]:
+				[`${prefix}${canisterName.toUpperCase()}_CANISTER_ID`]:
 					canisterDetails[network as keyof Details]
 			};
 		}, {});
 	} catch (e) {
-		throw Error(`Could not get canister ID from ${canisterIdsJsonFile}: ${e}`);
+		console.warn(`Could not get canister ID for prefix '${prefix}': ${e}`);
+		return {};
 	}
 };
 

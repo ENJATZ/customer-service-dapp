@@ -46,7 +46,7 @@
 		"@connect2ic/svelte": "^0.1.6",
 		"@dfinity/agent": "^0.14.1",
 		"@dfinity/candid": "^0.14.1",
-		"@dfinity/candid-ui": "file:../dfn-components/packages/candid-ui",
+		"@dfinity/candid-ui": "^1.1.0",
 		"@dfinity/principal": "^0.14.1",
 		"regenerator-runtime": "^0.13.11"
 	}
